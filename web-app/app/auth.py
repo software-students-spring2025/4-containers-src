@@ -6,7 +6,7 @@ from flask import Blueprint, flash, redirect, render_template, request, url_for
 from flask_login import (UserMixin, login_required, login_user,
                          logout_user)
 
-from . import bcrypt, db, login_manager
+from .extensions import bcrypt, db, login_manager
 
 auth = Blueprint("auth", __name__)
 

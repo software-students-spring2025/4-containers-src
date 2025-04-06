@@ -3,24 +3,15 @@ Initializes flask and mongodb app
 """
 import os
 
-import pymongo
 from dotenv import load_dotenv
 from flask import Flask
-from flask_bcrypt import Bcrypt
-from flask_login import LoginManager
-
-load_dotenv()
-
-mongo = pymongo.MongoClient(os.getenv("MONGO_URI"), ssl = True)
-db = mongo[os.getenv("MONGO_DBNAME")]
-bcrypt = Bcrypt()
-login_manager = LoginManager()
-
+from .extensions import mongo, db, bcrypt, login_manager
 
 def create_app():
     """
     initizes everything that will be used
     """
+    load_dotenv()
     app = Flask(__name__)
     app.config["MONGO_URI"] = os.getenv("MONGO_URI")
     app.secret_key = os.getenv("SECRET_KEY")
