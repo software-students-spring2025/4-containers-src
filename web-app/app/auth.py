@@ -40,7 +40,7 @@ def register():
 
         # hash password and store user
         hashed_password = bcrypt.generate_password_hash(password).decode("utf-8")
-        user_id = users.insert_one(
+        _ = users.insert_one(
             {"username": username, "password": hashed_password}
         ).inserted_id  # pylint: disable=unused-variable
         return redirect(url_for("auth.login"))
