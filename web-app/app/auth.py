@@ -1,10 +1,12 @@
 """
 Provides routes for user sign in feature of flask app
 """
-from flask import Blueprint, render_template, request, redirect,url_for, flash
 from bson.objectid import ObjectId
-from flask_login import UserMixin, login_user, logout_user, login_required, current_user
-from . import db, bcrypt, login_manager
+from flask import Blueprint, flash, redirect, render_template, request, url_for
+from flask_login import (UserMixin, login_required, login_user,
+                         logout_user)
+
+from . import bcrypt, db, login_manager
 
 auth = Blueprint("auth", __name__)
 
@@ -35,7 +37,7 @@ def register():
 
         #hash password and store user
         hashed_password = bcrypt.generate_password_hash(password).decode("utf-8")
-        user_id = users.insert_one({"username": username, "password": hashed_password}).inserted_id
+        user_id = users.insert_one({"username": username, "password": hashed_password}).inserted_id # pylint: disable=unused-variable
         return redirect(url_for("auth.login"))
 
     return render_template("register.html")
