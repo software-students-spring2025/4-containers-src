@@ -1,10 +1,10 @@
-FROM python:3.12
+FROM python:3.10
 
 WORKDIR /web-app
 
-COPY requirements.txt .
-RUN pip3 install -r requirements.txt
+COPY Pipfile Pipfile.lock ./
+RUN pip install pipenv && pipenv install --deploy --ignore-pipfile
 
 COPY . .
 
-CMD [ "python3", "run.py"]
+CMD [ "pipenv", "run", "python3", "run.py" ]
