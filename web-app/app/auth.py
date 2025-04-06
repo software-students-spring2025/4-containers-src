@@ -1,12 +1,18 @@
-from flask import Blueprint, render_template, request, current_app, redirect, abort, url_for, make_response, session, flash
-from . import db, bcrypt, login_manager
-from flask_login import UserMixin, login_user, logout_user, login_required, current_user
+"""
+Provides routes for user sign in feature of flask app
+"""
+from flask import Blueprint, render_template, request, redirect,url_for, flash
 from bson.objectid import ObjectId
+from flask_login import UserMixin, login_user, logout_user, login_required, current_user
+from . import db, bcrypt, login_manager
 
 auth = Blueprint("auth", __name__)
 
 #user class for login
 class User(UserMixin):
+    """
+    user class for login
+    """
     def __init__(self, user_data):
         self.id = str(user_data["_id"])
         self.username = user_data["username"]
@@ -14,6 +20,9 @@ class User(UserMixin):
 #user registration
 @auth.route("/register", methods=["GET", "POST"])
 def register():
+    """
+    user registration. doesn't let user create account with same username as another user
+    """
     users = db.users
     if request.method == "POST":
         username = request.form["username"]
@@ -34,6 +43,9 @@ def register():
 #user login
 @auth.route("/login", methods=["GET", "POST"])
 def login():
+    """
+    user login
+    """
     users = db.users
     if request.method == "POST":
         username = request.form["username"]
@@ -45,13 +57,15 @@ def login():
             user = User(user_data)
             login_user(user)
             return redirect(url_for("main.home"))
-        
         flash("Invalid credentials", "error")
 
     return render_template("login.html")
 
 @login_manager.user_loader
 def load_user(user_id):
+    """
+    load user if already logged in
+    """
     users = db.users
     user_data = users.find_one({"_id": ObjectId(user_id)})
     return User(user_data) if user_data else None
@@ -59,5 +73,8 @@ def load_user(user_id):
 @auth.route("/logout")
 @login_required
 def logout():
+    """
+    user logout
+    """
     logout_user()
     return redirect(url_for("main.home"))
