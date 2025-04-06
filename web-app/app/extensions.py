@@ -1,6 +1,7 @@
 """
 dependencies that prevent circular import
 """
+
 # app/extensions.py
 import os
 import pymongo
