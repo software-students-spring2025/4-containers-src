@@ -1,0 +1,25 @@
+
+services:
+  flask-app:
+    environment:
+      - FLASK_APP="web-app:create_app"
+    build:
+      context: ./web-app   # where dockerfile is
+    volumes:
+      - ./:/app
+    ports:
+      - "5002:5000"  # host 5001 container 5000
+    env_file:
+      - .env 
+    depends_on:
+      - mongo  
+  
+  mongo:
+    image: mongo  #official mongodb image
+    ports:
+      - "27017:27017"  # mongodb default port
+    volumes:
+      - mongo-data:/data/db  # volume for mongo
+
+volumes:
+  mongo-data: 
