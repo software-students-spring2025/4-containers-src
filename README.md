@@ -22,6 +22,6 @@ If port number already use, select different port for `flask-app` or `mongodb` b
 
 View the app in browser:
 
-- open `http://localhost:5001` in preferred web browser (or whatever port number used for host) 
+- open `http://localhost:5002` in preferred web browser (or whatever port number used for host) 
 
 _Note that if any files were edited, container must be stopped then restarted_
