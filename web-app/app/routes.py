@@ -14,6 +14,7 @@ def home():
     """
     return render_template("home.html")
 
+
 @main.route("/camera")
 def camera():
     """
