@@ -1,0 +1,41 @@
+{% extends "index.html" %}
+
+{% block title %}Webcam Feed{% endblock %}
+
+{% block navbar_links %}
+<li class="nav-item">
+  <a class="nav-link" href="{{ url_for('main.home') }}">Home</a>
+</li>
+{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+  <h2>Live Webcam Feed</h2>
+  <div class="row">
+    <div class="col-md-12 text-center">
+      <!-- Video element to show live webcam feed -->
+      <video id="video" width="640" height="480" autoplay class="img-fluid border"></video>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Select the video element
+  const video = document.getElementById('video');
+  
+  // Request access to the webcam using getUserMedia API
+  if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+    navigator.mediaDevices.getUserMedia({ video: true })
+      .then(stream => {
+        // Set the video source to the stream object
+        video.srcObject = stream;
+        video.play();
+      })
+      .catch(err => {
+        console.error("Error accessing the webcam:", err);
+      });
+  } else {
+    alert('Sorry, your browser does not support accessing the webcam.');
+  }
+</script>
+{% endblock %}

@@ -13,3 +13,11 @@ def home():
     home page, regardless whether user is logged in or not
     """
     return render_template("home.html")
+
+
+@main.route("/camera")
+def camera():
+    """
+    camera to record hand movements
+    """
+    return render_template("camera.html")
