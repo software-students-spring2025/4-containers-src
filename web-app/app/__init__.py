@@ -15,8 +15,8 @@ def create_app():
     """
     load_dotenv()
     app = Flask(__name__)
-    app.config["MONGO_URI"] = os.getenv("MONGO_URI")
-    app.secret_key = os.getenv("SECRET_KEY")
+    app.config["MONGO_URI"] = os.getenv("MONGO_URI", "mongodb://admin:secretpassword@localhost:27017/gesture_auth?authSource=admin")
+    app.secret_key = os.getenv("SECRET_KEY", "secretsecretkey")
     bcrypt.init_app(app)
     login_manager.init_app(app)
     from .auth import auth  # pylint: disable=import-outside-toplevel
