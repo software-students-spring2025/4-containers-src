@@ -27,25 +27,21 @@ def camera():
     return render_template("camera.html")
 
 @main.route("/upload_frame", methods=["POST"])
-@login_required  # Ensures that only authenticated users can access this route
+@login_required
 def upload_frame():
-    # Try to extract the frame data from the JSON payload
     data = request.get_json()
     if not data or "frame_data" not in data:
         return jsonify({"error": "No frame data provided"}), 400
 
     frame_data = data["frame_data"]
-    user_id = current_user.id  # Retrieve the user id from the flask-login session
+    user_id = current_user.id
 
-    # Build the document to be stored in MongoDB
     frame_record = {
         "user_id": user_id,
         "frame_data": frame_data,
-        "timestamp": datetime.datetime.now(datetime.timezone.utc)  # Optional, adds a timestamp
+        "timestamp": datetime.datetime.now(datetime.timezone.utc)
     }
     
-    # Insert the document into the 'frames' collection 
     result = db.frames.insert_one(frame_record)
     
-    # Return a JSON response with the inserted document id
     return jsonify({"success": True, "frame_id": str(result.inserted_id)})
