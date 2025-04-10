@@ -1,64 +1,61 @@
-{% extends "index.html" %}
-
-{% block title %}AppName - Login{% endblock %}
-
-{% block navbar_links %}
-  <li class="nav-item">
-    <a class="nav-link active" aria-current="page" href="{{ url_for('auth.login') }}">Login</a>
-  </li>
-  <li class="nav-item">
-    <a class="nav-link" href="{{ url_for('auth.register') }}">Register</a>
-  </li>
-{% endblock %}
-
-{% block content %}
-  <div class="container mt-5">
-    <h1 class="text-center mb-4">Login</h1>
-    <div class="row justify-content-center">
-      <div class="col-md-6">
-        <div class="card p-4 shadow">
-          <form action="{{ url_for('auth.login') }}" method="POST">
-            <div class="mb-3">
-              <label for="username" class="form-label">Username</label>
-              <input
-                type="text"
-                class="form-control"
-                id="username"
-                name="username"
-                placeholder="Enter your username"
-                required
-              />
-            </div>
-            <div class="mb-3">
-              <label for="password" class="form-label">Password</label>
-              <input
-                type="password"
-                class="form-control"
-                id="password"
-                name="password"
-                placeholder="Enter your password"
-                required
-              />
-              {% with messages = get_flashed_messages(category_filter=['error']) %}
-                {% if messages %}
-                <div class="invalid-feedback d-block">
-                    {{ messages[0] }}
-                </div>
-                {% endif %}
-              {% endwith %}
-            </div>
-            <div class="d-grid">
-              <button type="submit" class="btn btn-primary">Login</button>
-            </div>
-          </form>
-          <div class="mt-3 text-center">
-            <small>
-              Don't have an account?
-              <a href="{{ url_for('auth.register') }}">Register Here</a>
-            </small>
+{% extends "index.html" %} {% block title %}AppName - Login{% endblock %} {%
+block navbar_links %}
+<li class="nav-item">
+  <a
+    class="nav-link active"
+    aria-current="page"
+    href="{{ url_for('auth.login') }}"
+    >Login</a
+  >
+</li>
+<li class="nav-item">
+  <a class="nav-link" href="{{ url_for('auth.register') }}">Register</a>
+</li>
+{% endblock %} {% block content %}
+<div class="container mt-5">
+  <h1 class="text-center mb-4">Login</h1>
+  <div class="row justify-content-center">
+    <div class="col-md-6">
+      <div class="card p-4 shadow">
+        <form action="{{ url_for('auth.login') }}" method="POST">
+          <div class="mb-3">
+            <label for="username" class="form-label">Username</label>
+            <input
+              type="text"
+              class="form-control"
+              id="username"
+              name="username"
+              placeholder="Enter your username"
+              required
+            />
           </div>
+          <div class="mb-3">
+            <label for="password" class="form-label">Password</label>
+            <input
+              type="password"
+              class="form-control"
+              id="password"
+              name="password"
+              placeholder="Enter your password"
+              required
+            />
+            {% with messages = get_flashed_messages(category_filter=['error'])
+            %} {% if messages %}
+            <div class="invalid-feedback d-block">{{ messages[0] }}</div>
+            {% endif %} {% endwith %}
+          </div>
+          <div class="d-grid">
+            <button type="submit" class="btn btn-primary">Login</button>
+          </div>
+        </form>
+        <div class="mt-3 text-center">
+          <small>
+            Don't have an account?
+            <a href="{{ url_for('auth.register') }}">Register Here</a>
+          </small>
         </div>
       </div>
     </div>
   </div>
+</div>
 {% endblock %}
