@@ -7,7 +7,7 @@ import os
 from dotenv import load_dotenv
 from flask import Flask
 from .extensions import bcrypt, login_manager
-
+from .routes import main as main_bp
 
 def create_app():
     """
@@ -22,6 +22,6 @@ def create_app():
     from .auth import auth  # pylint: disable=import-outside-toplevel
     from .routes import main  # pylint: disable=import-outside-toplevel
 
-    app.register_blueprint(main)
+    app.register_blueprint(main_bp)
     app.register_blueprint(auth)
     return app

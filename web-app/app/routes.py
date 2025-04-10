@@ -2,13 +2,16 @@
 Provides routes for main flask app
 """
 
-from flask import Blueprint, render_template, request, jsonify
+from flask import Blueprint, render_template, request, jsonify, current_app
 from flask_login import login_required, current_user
-import datetime
-
+from datetime import datetime
+from flask import Blueprint, request, jsonify
+from .predictor import predict_asl_letter
 from .extensions import db
+import traceback
 
 main = Blueprint("main", __name__)
+bp = Blueprint("predict", __name__)
 
 
 @main.route("/")
@@ -26,26 +29,41 @@ def camera():
     """
     return render_template("camera.html")
 
+
 @main.route("/upload_frame", methods=["POST"])
-@login_required  # Ensures that only authenticated users can access this route
 def upload_frame():
-    # Try to extract the frame data from the JSON payload
-    data = request.get_json()
-    if not data or "frame_data" not in data:
-        return jsonify({"error": "No frame data provided"}), 400
+    data = request.get_json(force=True)
+    if "frame_data" not in data:
+        return jsonify({"error": "No frame data provided."}), 400
+    if "user_id" not in data:
+        return jsonify({"error": "No user id provided."}), 400
 
     frame_data = data["frame_data"]
-    user_id = current_user.id  # Retrieve the user id from the flask-login session
 
-    # Build the document to be stored in MongoDB
-    frame_record = {
-        "user_id": user_id,
-        "frame_data": frame_data,
-        "timestamp": datetime.datetime.now(datetime.timezone.utc)  # Optional, adds a timestamp
+    # Clean the frame data by removing the data URL prefix, if it exists.
+    try:
+        if frame_data.startswith("data:image/jpeg;base64,"):
+            frame_data = frame_data.split("data:image/jpeg;base64,")[1]
+    except Exception as e:
+        current_app.logger.error("Frame data processing failed: %s", traceback.format_exc())
+        return jsonify({"error": f"Frame data processing failed: {str(e)}"}), 500
+
+    try:
+        predicted_letter = predict_asl_letter(frame_data)
+    except Exception as e:
+        current_app.logger.error("Prediction failed: %s", traceback.format_exc())
+        return jsonify({"error": f"Prediction failed: {str(e)}"}), 500
+
+    new_entry = {
+        "user_id": data["user_id"],
+        "predicted_letter": predicted_letter,
+        "timestamp": datetime.utcnow().isoformat() + "Z"
     }
-    
-    # Insert the document into the 'frames' collection 
-    result = db.frames.insert_one(frame_record)
-    
-    # Return a JSON response with the inserted document id
-    return jsonify({"success": True, "frame_id": str(result.inserted_id)})
+
+    result = db.predicted_letters.insert_one(new_entry)
+    print("Inserted document ID:", result.inserted_id)
+    return jsonify({
+        "success": True,
+        "predicted_letter": predicted_letter,
+        "entry_id": str(result.inserted_id)
+    }), 200
