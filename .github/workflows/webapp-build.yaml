@@ -1,4 +1,4 @@
-name: CI for web App
+name: CICD for web App
 
 on: [pull_request]
 
