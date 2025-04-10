@@ -32,7 +32,6 @@ jobs:
         working-directory: web-app
         run:
           pipenv install pytest
-          pipenv --venv
           pipenv install
           pipenv run python -m pytest
 
