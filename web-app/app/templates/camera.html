@@ -40,27 +40,20 @@ navbar_links %}
     alert("Sorry, your browser does not support accessing the webcam.");
   }
 
-  // Function to capture a frame from the video feed
   function captureFrame() {
-    // Create a temporary canvas element
     const canvas = document.createElement("canvas");
-    // Use the video element dimensions
     canvas.width = video.videoWidth;
     canvas.height = video.videoHeight;
 
-    // Draw the current video frame into the canvas
     const ctx = canvas.getContext("2d");
     ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
 
-    // Convert canvas content to a Base64 encoded image
     return canvas.toDataURL("image/jpeg");
   }
 
-  // Function to send the captured frame to the server as JSON
   function sendFrameToServer() {
     const frameData = captureFrame();
 
-    // Build the JSON payload
     const payload = {
       frame_data: frameData,
     };
@@ -78,8 +71,7 @@ navbar_links %}
       })
       .catch((error) => console.error("Error sending frame:", error));
   }
-
-  // Optional: Send a frame every 5 seconds (or adjust as needed)
+  // adjust capture interval by changing the second parameter in milliseconds
   setInterval(sendFrameToServer, 5000);
 </script>
 {% endblock %}
