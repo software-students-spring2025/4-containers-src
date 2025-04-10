@@ -1,11 +1,17 @@
 ![Lint-free](https://github.com/nyu-software-engineering/containerized-app-exercise/actions/workflows/lint.yml/badge.svg)
+!badge goes here for web-app testing
+!badge goes here for machine-learning-client testing
 
-# Containerized App Exercise
+# Team name: src
+This application allows the user to practice American Sign Language, and records the signed letters in a MongoDB database.  
 
-Build a containerized app that uses machine learning. See [instructions](./instructions.md) for details.
+# Group Members
+[Imran Ahmed](https://github.com/mxa5251)
+[Joel Kim](https://github.com/joel-d-kim)
+[Dibuk Seid](https://github.com/dibukseid)
+[Tim Xu](https://github.com/timxu23)
 
-## Steps to run software
-
+# Steps to run software
 Required software:
 
 - install and run [docker desktop](https://www.docker.com/get-started)
