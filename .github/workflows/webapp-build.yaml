@@ -31,7 +31,5 @@ jobs:
       - name: Run tests with Pytest
         working-directory: web-app
         run:
-          pipenv install pytest
-          pipenv install
-          pipenv run python -m pytest
+          pipenv install pytest && pipenv install && pipenv run python -m pytest
 
