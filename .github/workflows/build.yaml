@@ -1,7 +1,6 @@
-name: CI for Flask App
+name: CI for web App
 
-on:
-  pull_request:
+on: [pull_request]
 
 jobs:
   test:
@@ -28,7 +27,12 @@ jobs:
       - name: Install dependencies (including pytest)
         run: |
           pipenv install --dev
-          pipenv install pytest
 
       - name: Run tests with Pytest
-        run: pipenv run pytest
+        working-directory: web-app
+        run:
+          pipenv install pytest
+          pipenv --venv
+          pipenv install
+          pipenv run python -m pytest
+
