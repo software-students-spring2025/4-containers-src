@@ -1,41 +1,85 @@
-{% extends "index.html" %}
-
-{% block title %}Webcam Feed{% endblock %}
-
-{% block navbar_links %}
+{% extends "index.html" %} {% block title %}Webcam Feed{% endblock %} {% block
+navbar_links %}
 <li class="nav-item">
   <a class="nav-link" href="{{ url_for('main.home') }}">Home</a>
 </li>
-{% endblock %}
-
-{% block content %}
+{% endblock %} {% block content %}
 <div class="container mt-4">
   <h2>Live Webcam Feed</h2>
   <div class="row">
     <div class="col-md-12 text-center">
       <!-- Video element to show live webcam feed -->
-      <video id="video" width="640" height="480" autoplay class="img-fluid border"></video>
+      <video
+        id="video"
+        width="640"
+        height="480"
+        autoplay
+        class="img-fluid border"
+      ></video>
     </div>
   </div>
 </div>
 
 <script>
   // Select the video element
-  const video = document.getElementById('video');
-  
+  const video = document.getElementById("video");
+
   // Request access to the webcam using getUserMedia API
   if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-    navigator.mediaDevices.getUserMedia({ video: true })
-      .then(stream => {
+    navigator.mediaDevices
+      .getUserMedia({ video: true })
+      .then((stream) => {
         // Set the video source to the stream object
         video.srcObject = stream;
         video.play();
       })
-      .catch(err => {
+      .catch((err) => {
         console.error("Error accessing the webcam:", err);
       });
   } else {
-    alert('Sorry, your browser does not support accessing the webcam.');
+    alert("Sorry, your browser does not support accessing the webcam.");
   }
+
+  // Function to capture a frame from the video feed
+  function captureFrame() {
+    // Create a temporary canvas element
+    const canvas = document.createElement("canvas");
+    // Use the video element dimensions
+    canvas.width = video.videoWidth;
+    canvas.height = video.videoHeight;
+
+    // Draw the current video frame into the canvas
+    const ctx = canvas.getContext("2d");
+    ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+    // Convert canvas content to a Base64 encoded image
+    return canvas.toDataURL("image/jpeg");
+  }
+
+  // Function to send the captured frame to the server as JSON
+  function sendFrameToServer() {
+    const frameData = captureFrame();
+
+    // Build the JSON payload
+    const payload = {
+      frame_data: frameData,
+    };
+
+    fetch("/upload_frame", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(payload),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log("Frame saved:", data);
+      })
+      .catch((error) => console.error("Error sending frame:", error));
+  }
+
+  // Optional: Send a frame every 5 seconds (or adjust as needed)
+  setInterval(sendFrameToServer, 5000);
 </script>
 {% endblock %}
