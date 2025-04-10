@@ -25,6 +25,9 @@ zipp = "==3.21.0"
 typing-extensions = "*"
 black = "*"
 pytest = "*"
+opencv-python = "*"
+tensorflow= "*"
+
 
 [dev-packages]
 pytest-cov = "*"

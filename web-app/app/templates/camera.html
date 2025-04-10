@@ -22,6 +22,9 @@ navbar_links %}
 </div>
 
 <script>
+  // Inject the user ID into a variable. If no user is logged in, this can default to a dummy value.
+  const userId = "{{ current_user.id if current_user.is_authenticated else 'dummy_user_id' }}";
+  
   // Select the video element
   const video = document.getElementById("video");
 
@@ -30,7 +33,6 @@ navbar_links %}
     navigator.mediaDevices
       .getUserMedia({ video: true })
       .then((stream) => {
-        // Set the video source to the stream object
         video.srcObject = stream;
         video.play();
       })
@@ -45,10 +47,8 @@ navbar_links %}
     const canvas = document.createElement("canvas");
     canvas.width = video.videoWidth;
     canvas.height = video.videoHeight;
-
     const ctx = canvas.getContext("2d");
     ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-
     return canvas.toDataURL("image/jpeg");
   }
 
@@ -56,7 +56,8 @@ navbar_links %}
     const frameData = captureFrame();
 
     const payload = {
-      frame_data: frameData,
+      user_id: userId,        // Include the user_id here
+      frame_data: frameData,  // Frame data as a Base64 encoded string
     };
 
     fetch("/upload_frame", {
@@ -72,7 +73,7 @@ navbar_links %}
       })
       .catch((error) => console.error("Error sending frame:", error));
   }
-  // adjust capture interval by changing the second parameter in milliseconds
+
   setInterval(sendFrameToServer, 5000);
 </script>
 {% endblock %}
