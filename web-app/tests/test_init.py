@@ -13,7 +13,9 @@ def test_create_app(monkeypatch):
     """
     # Set environment variables for testing
     test_mongo_uri = "mongodb://localhost:27017/testdb"
+    test_mongo_dbname = "testdb"
     test_secret_key = "testsecret"
+    monkeypatch.setenv("MONGO_DBNAME", test_mongo_dbname)
     monkeypatch.setenv("MONGO_URI", test_mongo_uri)
     monkeypatch.setenv("SECRET_KEY", test_secret_key)
 
