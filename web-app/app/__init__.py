@@ -6,7 +6,7 @@ import os
 
 from dotenv import load_dotenv
 from flask import Flask
-from .extensions import mongo, db, bcrypt, login_manager
+from .extensions import bcrypt, login_manager
 
 
 def create_app():

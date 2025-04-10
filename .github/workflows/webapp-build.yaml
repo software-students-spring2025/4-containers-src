@@ -1,4 +1,4 @@
-name: CICD for web App
+name: tests for web App
 
 on: [pull_request]
 
